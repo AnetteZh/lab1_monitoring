@@ -205,3 +205,18 @@
 
 Видим, что все так
 
+## 3. Визуализация
+
+1. В терминале выполняем команду `docker exec -it grafana bash -c "grafana cli plugins install alexanderzobnin-zabbix-app"` , затем `docker restart grafana`
+
+<img width="1267" height="217" alt="image" src="https://github.com/user-attachments/assets/5513f0a4-1118-43b5-a708-0c33e92e9341" />
+
+2. Заходим в графану (по умолчанию http://localhost:3000/ ), раздел Administration → Plugins. Найти там Zabbix, активировать (Enable)
+   <img width="1835" height="985" alt="image" src="https://github.com/user-attachments/assets/001a6107-70bd-47be-bf2a-f1fe9e373916" />
+
+3. Подключаем Loki к Grafana, раздел Connections → Data sources → Loki. В настройках подключения указать любое имя и адрес `http://loki:3100` , все
+остальное можно оставить по дефолту
+
+<img width="1865" height="973" alt="image" src="https://github.com/user-attachments/assets/0a9ff301-659e-4b48-b5be-f2a70f332b93" />
+
+
