@@ -269,4 +269,8 @@ Username и Password, через Save & test проверяем, что подк
 <img width="323" height="200" alt="image" src="https://github.com/user-attachments/assets/be1cf13d-98c7-47ca-8dc9-90e31c1f9b68" />
 <img width="319" height="150" alt="image" src="https://github.com/user-attachments/assets/ef8dfcc4-86f8-4fbe-ab5b-b21d15348e17" />
 
+Вот такой красивый дашборд у нас получился:
+<img width="1844" height="795" alt="image" src="https://github.com/user-attachments/assets/88655bae-8098-43af-995a-f0cc23abf4e4" />
+
+
 
