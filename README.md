@@ -6,81 +6,84 @@
 Подключить к тестовому сервису Nextcloud мониторинг + логирование. Осуществить визуализацию через Grafana
 
 ## 1. Логирование
-1. Создаем файл `docker-compose.yml` аналогичный файлу из задания, чтобы объединить все необходимое для лабораторной.
+1. Создаем файл `docker-compose.yml` аналогичный файлу из задания, чтобы объединить все необходимое для лабораторной. (все же пришлось поменять версию grafana, т.к. версия zabbix была с ней несовместима + добавить volume для grafana, чтобы все дашборды и настройки у нас сохранялись даже при перезапуске контейнеров)
    ```
    services:
-      nextcloud:
-        image: nextcloud:29.0.6
-        container_name: nextcloud # на это имя будет завязана настройка забикса далее, так что лучше не менять
-        ports:
-          - "8080:80"
-        volumes:
-          - nc-data:/var/www/html/data
-      loki: # сервис-обработчик логов
-        image: grafana/loki:2.9.0
-        container_name: loki
-        ports:
-          - "3100:3100"
-        command: -config.file=/etc/loki/local-config.yaml # запуск с дефолтным конфигом
-      promtail: # сервис-сборщик логов
-        image: grafana/promtail:2.9.0
-        container_name: promtail
-        volumes:
-          - nc-data:/opt/nc_data # та же самая директория, которая монтируется в Nextcloud
-          - ./promtail_config.yml:/etc/promtail/config.yml
-        command: -config.file=/etc/promtail/config.yml
-      grafana: # сервис визуализации
-        environment:
-          - GF_PATHS_PROVISIONING=/etc/grafana/provisioning # просто
-          - GF_AUTH_ANONYMOUS_ENABLED=true # дефолтные
-          - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin # настройки
-        command: /run.sh
-        image: grafana/grafana:11.2.0
-        container_name: grafana
-        ports:
-          - "3000:3000"
-      postgres-zabbix:
-        image: postgres:15
-        container_name: postgres-zabbix
-        environment:
-          POSTGRES_USER: zabbix
-          POSTGRES_PASSWORD: zabbix
-          POSTGRES_DB: zabbix
-        volumes:
-          - zabbix-db:/var/lib/postgresql/data
-        healthcheck:
-          test: ["CMD", "pg_isready", "-U", "zabbix"]
-          interval: 10s
-          retries: 5
-          start_period: 5s
-      zabbix-server:
-        image: zabbix/zabbix-server-pgsql:ubuntu-6.4-latest # непосредственно бэкенд забикса
-        container_name: zabbix-back
-        ports:
-          - "10051:10051"
-        depends_on:
-          - postgres-zabbix
-        environment:
-          POSTGRES_USER: zabbix
-          POSTGRES_PASSWORD: zabbix
-          POSTGRES_DB: zabbix
-          DB_SERVER_HOST: postgres-zabbix
-      zabbix-web-nginx-pgsql:
-        image: zabbix/zabbix-web-nginx-pgsql:ubuntu-6.4-latest # фронтенд забикса
-        container_name: zabbix-front
-        ports:
-          - "8082:8080" # внешний порт можно любой по своему желанию
-        depends_on:
-          - postgres-zabbix
-        environment:
-          POSTGRES_USER: zabbix
-          POSTGRES_PASSWORD: zabbix
-          POSTGRES_DB: zabbix
-          DB_SERVER_HOST: postgres-zabbix
-          ZBX_SERVER_HOST: zabbix-back
-    volumes:
-      nc-data:
-      zabbix-db:
+     nextcloud:
+       image: nextcloud:29.0.6
+       container_name: nextcloud # на это имя будет завязана настройка забикса далее, так что лучше не менять
+       ports:
+         - "8080:80"
+       volumes:
+         - nc-data:/var/www/html/data
+     loki: # сервис-обработчик логов
+       image: grafana/loki:2.9.0
+       container_name: loki
+       ports:
+         - "3100:3100"
+       command: -config.file=/etc/loki/local-config.yaml # запуск с дефолтным конфигом
+     promtail: # сервис-сборщик логов
+       image: grafana/promtail:2.9.0
+       container_name: promtail
+       volumes:
+         - nc-data:/opt/nc_data # та же самая директория, которая монтируется в Nextcloud
+         - ./promtail_config.yml:/etc/promtail/config.yml
+       command: -config.file=/etc/promtail/config.yml
+     grafana: # сервис визуализации
+       environment:
+         - GF_PATHS_PROVISIONING=/etc/grafana/provisioning # просто
+         - GF_AUTH_ANONYMOUS_ENABLED=true # дефолтные
+         - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin # настройки
+       command: /run.sh
+       image: grafana/grafana:11.6.0
+       container_name: grafana
+       ports:
+         - "3000:3000"
+       volumes:
+         - grafana-data:/var/lib/grafana
+     postgres-zabbix:
+       image: postgres:15
+       container_name: postgres-zabbix
+       environment:
+         POSTGRES_USER: zabbix
+         POSTGRES_PASSWORD: zabbix
+         POSTGRES_DB: zabbix
+       volumes:
+         - zabbix-db:/var/lib/postgresql/data
+       healthcheck:
+         test: ["CMD", "pg_isready", "-U", "zabbix"]
+         interval: 10s
+         retries: 5
+         start_period: 5s
+     zabbix-server:
+       image: zabbix/zabbix-server-pgsql:ubuntu-6.4-latest # непосредственно бэкенд забикса
+       container_name: zabbix-back
+       ports:
+         - "10051:10051"
+       depends_on:
+         - postgres-zabbix
+       environment:
+         POSTGRES_USER: zabbix
+         POSTGRES_PASSWORD: zabbix
+         POSTGRES_DB: zabbix
+         DB_SERVER_HOST: postgres-zabbix
+     zabbix-web-nginx-pgsql:
+       image: zabbix/zabbix-web-nginx-pgsql:ubuntu-6.4-latest # фронтенд забикса
+       container_name: zabbix-front
+       ports:
+         - "8082:8080" # внешний порт можно любой по своему желанию
+       depends_on:
+         - postgres-zabbix
+       environment:
+         POSTGRES_USER: zabbix
+         POSTGRES_PASSWORD: zabbix
+         POSTGRES_DB: zabbix
+         DB_SERVER_HOST: postgres-zabbix
+         ZBX_SERVER_HOST: zabbix-back
+   volumes:
+     nc-data:
+     zabbix-db:
+     grafana-data:
    ```
 
    И конфигурационный файл promtail `promtail_config.yml`:
@@ -272,5 +275,17 @@ Username и Password, через Save & test проверяем, что подк
 Вот такой красивый дашборд у нас получился:
 <img width="1844" height="795" alt="image" src="https://github.com/user-attachments/assets/88655bae-8098-43af-995a-f0cc23abf4e4" />
 
+## Вопросы
+1. Чем SLO отличается от SLA?
+   * **SLA** (Service Level Agreement) - это юридический договор между поставщиком услуг и клиентом, в котором прописаны обязательства и штрафы за их нарушение.
 
+   * **SLO** (Service Level Objective) - это внутренняя техническая цель, которую ставит перед собой команда разработки/эксплуатации, чтобы не нарушить SLA. SLO — это конкретные измеримые показатели. SLO служит инструментом для достижения SLA.
+     
+2. Чем отличается инкрементальный бэкап от дифференциального?
+   * **Инкрементальный**: копирует только те данные, которые изменились с момента последнего любого бэкапа (полного или инкрементального). Требует меньше места, но для восстановления нужен полный бэкап + все инкрементальные копии по цепочке.
 
+   * **Дифференциальный**: копирует все данные, которые изменились с момента последнего полного бэкапа. Занимает больше места, чем инкрементальный, но для восстановления нужен только полный бэкап + последний дифференциальный.
+     
+3. В чем разница между мониторингом и observability?
+   * **Мониторинг** - это процесс отслеживания заранее определённого набора метрик и событий. Его задача вовремя заметить отклонение и отправить оповещение (алерт), когда какой-то показатель выходит за заданные границы.
+   * **Observability** - это более широкое понятие. Она отвечает на вопрос «Почему это сломалось?», даже если мы не знали об этой проблеме заранее. Наблюдаемость строится на трех столпах: метрики, логи и трейсы. Она позволяет исследовать систему изнутри и находить первопричины сложных сбоев, которые не покрываются стандартным мониторингом.
