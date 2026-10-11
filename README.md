@@ -255,4 +255,10 @@ Username и Password, через Save & test проверяем, что подк
      Как видно, это все логи
    * Считаем сумму логов, в которых за последние 5 минут были  `error`
      <img width="1605" height="586" alt="image" src="https://github.com/user-attachments/assets/d2cea6d9-e315-4178-baf0-ee733e3324a2" />
+     Таких у нас не оказалось
+     
+2. Создать два простеньких дашборда в Grafana с использованием датасурсов Zabbix (цветная плашка) и Loki (таблица с логами)
+
+Переходим в раздел Dasboards, нажимаем add visualization и выбираем источник данных. Начнем с локи, будем просто отображать логи в формате таблицы
+<img width="1847" height="979" alt="image" src="https://github.com/user-attachments/assets/ad7b6d01-0e79-476a-9c21-73211211d330" />
 
