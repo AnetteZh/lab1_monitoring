@@ -212,6 +212,7 @@
 <img width="1267" height="217" alt="image" src="https://github.com/user-attachments/assets/5513f0a4-1118-43b5-a708-0c33e92e9341" />
 
 2. Заходим в графану (по умолчанию http://localhost:3000/ ), раздел Administration → Plugins. Найти там Zabbix, активировать (Enable)
+   
    <img width="1835" height="985" alt="image" src="https://github.com/user-attachments/assets/001a6107-70bd-47be-bf2a-f1fe9e373916" />
 
 3. Подключаем Loki к Grafana, раздел Connections → Data sources → Loki. В настройках подключения указать любое имя и адрес `http://loki:3100` , все
@@ -221,17 +222,37 @@
 
 4. Сохранить подключение, нажав Save & Test. Если нет ошибок и сервис предлагает перейти к визуализации и/или просмотру данных, значит в Части 1 все
 настроено правильно
+
 <img width="1461" height="298" alt="image" src="https://github.com/user-attachments/assets/d10677e9-2100-47c2-a634-28533877e833" />
 
-5. Точно так же с забиксом: снова подключаем новый датасурс, в этот раз Zabbix. В качестве URL указываем `http://zabbix-front:8080/api_jsonrpc.php` , заполняем
+6. Точно так же с забиксом: снова подключаем новый датасурс, в этот раз Zabbix. В качестве URL указываем `http://zabbix-front:8080/api_jsonrpc.php` , заполняем
 Username и Password, через Save & test проверяем, что подключение успешно
+
+<img width="1861" height="1001" alt="image" src="https://github.com/user-attachments/assets/1f749c4b-0bc2-454f-ae5b-6ffd2d2e52ba" />
+
+Все успешно
 
 6. Собственно, можно перейти в Explore (на этой же странице или через общее меню), выбрать в качестве селектора (индекса) `job` либо `filename` — если все
 было правильно настроено, то нужные значения будут в выпадающем списке. Затем нажать Run query и увидеть свои логи (но это неточно)
+
 <img width="1847" height="980" alt="image" src="https://github.com/user-attachments/assets/9046e4c1-fd65-4961-a143-8631dcb70b85" />
 
 Тут видны логи, это точно
 
 
 <img width="1098" height="437" alt="image" src="https://github.com/user-attachments/assets/f1fec7b5-89ed-4b89-878f-173803406022" />
+
+7. То же самое с забиксом, при выставлении всех фильтров
+
+   <img width="1858" height="986" alt="image" src="https://github.com/user-attachments/assets/1af514e6-c7c0-4dbf-a990-b9228cf2a8ec" />
+
+   Ура, все видно
+
+## Задание
+1. “Поиграться” с запросами
+   * Попробуем посмотреть в Loki на все логи, которые не содержат `error`
+     <img width="1579" height="852" alt="image" src="https://github.com/user-attachments/assets/433d4f8a-b6f4-49c2-94d4-8fc8b62190f7" />
+     Как видно, это все логи
+   * Считаем сумму логов, в которых за последние 5 минут были  `error`
+     <img width="1605" height="586" alt="image" src="https://github.com/user-attachments/assets/d2cea6d9-e315-4178-baf0-ee733e3324a2" />
 
