@@ -219,4 +219,19 @@
 
 <img width="1865" height="973" alt="image" src="https://github.com/user-attachments/assets/0a9ff301-659e-4b48-b5be-f2a70f332b93" />
 
+4. Сохранить подключение, нажав Save & Test. Если нет ошибок и сервис предлагает перейти к визуализации и/или просмотру данных, значит в Части 1 все
+настроено правильно
+<img width="1461" height="298" alt="image" src="https://github.com/user-attachments/assets/d10677e9-2100-47c2-a634-28533877e833" />
+
+5. Точно так же с забиксом: снова подключаем новый датасурс, в этот раз Zabbix. В качестве URL указываем `http://zabbix-front:8080/api_jsonrpc.php` , заполняем
+Username и Password, через Save & test проверяем, что подключение успешно
+
+6. Собственно, можно перейти в Explore (на этой же странице или через общее меню), выбрать в качестве селектора (индекса) `job` либо `filename` — если все
+было правильно настроено, то нужные значения будут в выпадающем списке. Затем нажать Run query и увидеть свои логи (но это неточно)
+<img width="1847" height="980" alt="image" src="https://github.com/user-attachments/assets/9046e4c1-fd65-4961-a143-8631dcb70b85" />
+
+Тут видны логи, это точно
+
+
+<img width="1098" height="437" alt="image" src="https://github.com/user-attachments/assets/f1fec7b5-89ed-4b89-878f-173803406022" />
 
