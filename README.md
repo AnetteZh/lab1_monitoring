@@ -259,6 +259,14 @@ Username и Password, через Save & test проверяем, что подк
      
 2. Создать два простеньких дашборда в Grafana с использованием датасурсов Zabbix (цветная плашка) и Loki (таблица с логами)
 
-Переходим в раздел Dasboards, нажимаем add visualization и выбираем источник данных. Начнем с локи, будем просто отображать логи в формате таблицы
-<img width="1847" height="979" alt="image" src="https://github.com/user-attachments/assets/ad7b6d01-0e79-476a-9c21-73211211d330" />
+Переходим в раздел Dasboards, создаем новый дашборд. Затем визуализации можно добавить прямо из Explore. Для этого надо перейти в эту вкладку, выбрать нужную визуализацию, справа вверху нажать на add и указать, куда добавить.
+
+Для таблицы с логами в дашборде все понятно, она отобразится корректно. Перейдем к метрике healthy/unhealthy из zabbix.
+<img width="1856" height="971" alt="image" src="https://github.com/user-attachments/assets/ba2445d6-7040-4d1b-a4c1-4e56d2205521" />
+
+Чтобы оно отображалось так, нужно поменять визуализацию на stats и выбрать по какому полю мы будем смотреть. Будем смотреть последнее значение по полю (field) `Nextcloud: ping service`, а также поменяем цвета в зависимости от состояния (красный для unhealthy, зеленый для healthy).
+
+<img width="323" height="200" alt="image" src="https://github.com/user-attachments/assets/be1cf13d-98c7-47ca-8dc9-90e31c1f9b68" />
+<img width="319" height="150" alt="image" src="https://github.com/user-attachments/assets/ef8dfcc4-86f8-4fbe-ab5b-b21d15348e17" />
+
 
